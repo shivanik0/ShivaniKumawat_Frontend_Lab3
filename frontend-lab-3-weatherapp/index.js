@@ -34,7 +34,6 @@ function searchCity(location){
                 window.alert(data.message);
                 return;
             }
-            const { main, name, sys, weather } = data;
             setValues(data);
         })
     .catch(() => {
@@ -52,6 +51,17 @@ function setValues(data){
 
     const date_value=new Date();
     date.innerHTML=`${DAYS[date_value.getDay()]} ${date_value.getDate()} ${MONTHS[date_value.getMonth()]} ${date_value.getFullYear()}`;
+
+    const url = `https://restcountries.com/v3.1/alpha/${data.sys.country}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(full_name => {
+            city.innerHTML=`${data.name}, ${full_name[0].name.common}`;
+        })
+    .catch(()=>{
+        msg.textContent = "Invalid country code!";
+
+    });
 }
 
 searchbox.addEventListener( 'keypress', event => {
@@ -62,9 +72,4 @@ searchbox.addEventListener( 'keypress', event => {
 });
 
 //Default
-searchCity(" New Delhi");
-
-
-
-
-
+searchCity("New Delhi");
